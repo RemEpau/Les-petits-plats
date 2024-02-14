@@ -4,7 +4,7 @@ import { recipes } from "../data/recipes.js";
 recipes.forEach((recipe) => {
     const recipeCard = new DOMParser().parseFromString(`
         <article class="mb-52">
-            <h2 class="text-3xl font-bold mb-5">${recipe.name}</h2>
+            <h2 class="text-3xl font-bold mb-5 font-anton">${recipe.name}</h2>
             <p class=" text-lg">${recipe.description}</p>
             <ul class="flex flex-row gap-3 mt-5 mb-5">
                 ${recipe.ingredients.map((ingredient) => `<li class="

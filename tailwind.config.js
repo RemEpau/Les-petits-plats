@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {},
+    fontFamily: {
+      "anton": ["Anton", "sans-serif"],
+    }
   },
   plugins: [],
 }
