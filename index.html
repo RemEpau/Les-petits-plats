@@ -10,10 +10,46 @@
   <script type="module" src="./scripts/index.js"></script>
 </head>
 
-<body class="bg-slate-900">
-  <!-- This is just a example to test Vite + TailWind -->
-  <section id="recipes" class="md:container md:mx-auto text-slate-200">
-  </section>
+<body>
+  <!-- Create a header with a background image and a title -->
+  <header class="absolute h-[667px] mx-auto">
+    <nav class="pt-10 pl-20">
+      <a href="./" class="flex p-3 justify-center items-end gap-1 shrink-0 focus:outline-none
+        focus:ring-2 focus:ring-primary rounded-lg
+      ">
+        <img src="/images/logo.svg" alt="Les petits plats logo">
+        <img src="/images/cercle.svg" alt="">
+      </a>
+    </nav>
+  </header>
+  <main>
+    <section class="flex flex-col justify-center items-stretch h-full pt-56 pb-56">
+      <h1
+        class="flex items-center justify-center font-bold text-white bg-black bg-opacity-50 text-primary font-anton text-5xl text-center mb-10 leading-normal">
+        CHERCHEZ PARMI PLUS DE 1500 RECETTES
+        <br />
+        DU QUOTIDIEN, SIMPLES ET DÉLICIEUSES
+      </h1>
+      <form action="/images/search" method="get" class="ml-52 mr-52 relative">
+        <label for="search" class="sr-only">Rechercher une recette, un ingrédient, ...</label>
+        <input type="text" name="search" id="search"
+          class="w-full p-5 px-10 ml-2 text-lg text-gray-800 bg-white border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition"
+          placeholder="Rechercher une recette, un ingrédient, ..." aria-label="Search" />
+        <button type="submit"
+          class="group w-[50px] h-[50px] text-lg text-white bg-secondary rounded-lg flex items-center justify-center absolute right-2 top-2 hover:bg-primary transition">
+          <svg width="28" height="29" viewBox="0 0 28 29" fill="none" xmlns="http://www.w3.org/2000/svg" class="">
+            <g id="search">
+              <circle id="Ellipse" cx="10" cy="10.4219" r="9.5" stroke="white"
+                class="group-hover:stroke-secondary transition" />
+              <line id="Line 2" x1="18.3536" y1="19.0683" x2="27.3536" y2="28.0683" stroke="white"
+                class="group-hover:stroke-secondary transition" />
+            </g>
+          </svg>
+        </button>
+      </form>
+    </section>
+  </main>
+
 </body>
 
 </html>

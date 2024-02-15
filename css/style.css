@@ -10,3 +10,11 @@
         font-family: "Manrope", sans-serif;
     }
 }
+
+section {
+    background-image: url(/images/header-bg.jpg);
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    background-blend-mode: overlay;
+}
