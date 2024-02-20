@@ -14,6 +14,8 @@ async function displayData(recipesData) {
         const recipeCard = recipeModel.getRecipeCardDOM();
         recipesDOM.appendChild(recipeCard);
     });
+    const totalRecipes = recipesData.length;
+    document.getElementById('total-recipes').innerText = totalRecipes + " recettes";
 }
 
 async function init() {
