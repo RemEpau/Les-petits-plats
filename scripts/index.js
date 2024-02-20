@@ -22,6 +22,10 @@ async function init() {
     filtresDropDown();
     const recipes = await getRecipes();
     displayData(recipes);
+
+    document.getElementById('main-search').addEventListener('submit', function (e) {
+        e.preventDefault();
+    });
 }
 
 init();
