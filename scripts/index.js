@@ -4,7 +4,7 @@ import { Recipe } from "./models/Recipe.js";
 import { RecipeTemplate } from "./templates/RecipeTemplate.js";
 
 async function getRecipes() {
-    return await recipes;
+    return recipes;
 }
 
 async function displayData(recipesData) {
