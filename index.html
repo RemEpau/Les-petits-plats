@@ -3,15 +3,16 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="description" content="Les Petits Plats, le site de recettes de cuisine simples et délicieuses" />
+  <link rel="icon" type="image/svg+xml" href="images/cercle.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vite App</title>
+  <title>Les Petits Plats</title>
   <link rel="stylesheet" href="./css/style.css">
   <script type="module" src="./scripts/index.js"></script>
+  <script src="https://kit.fontawesome.com/c9f8ad8d51.js" crossorigin="anonymous"></script>
 </head>
 
-<body>
-  <!-- Create a header with a background image and a title -->
+<body class="bg-[#ededed] pb-[1000px]">
   <header class="absolute h-[667px] mx-auto">
     <nav class="pt-10 pl-20">
       <a href="./" class="flex p-3 justify-center items-end gap-1 shrink-0 focus:outline-none
@@ -23,9 +24,9 @@
     </nav>
   </header>
   <main>
-    <section class="flex flex-col justify-center items-stretch h-full pt-56 pb-56">
+    <section class="hero flex flex-col justify-center items-stretch h-full pt-48 pb-48">
       <h1
-        class="flex items-center justify-center font-bold text-white bg-black bg-opacity-50 text-primary font-anton text-5xl text-center mb-10 leading-normal">
+        class="flex items-center justify-center font-bold text-primary font-anton text-5xl text-center mb-10 leading-normal">
         CHERCHEZ PARMI PLUS DE 1500 RECETTES
         <br />
         DU QUOTIDIEN, SIMPLES ET DÉLICIEUSES
@@ -48,8 +49,15 @@
         </button>
       </form>
     </section>
+    <section class="px-20 pt-10">
+      <!-- Filtres -->
+      <div class="flex flex-row gap-10" id="filtres">
+      </div>
+      <div id="recipes" class="grid grid-cols-3 gap-32 -mt-48">
+        <!-- Recettes -->
+      </div>
+    </section>
   </main>
-
 </body>
 
 </html>
