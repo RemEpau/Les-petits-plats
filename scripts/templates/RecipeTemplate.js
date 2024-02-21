@@ -15,7 +15,6 @@ export class RecipeTemplate {
      * @returns {HTMLElement} - Le DOM de la carte de recette.
      */
     getRecipeCardDOM() {
-        console.log(this._recipe);
         const recipeCard = new DOMParser().parseFromString(`
                 <article
                     class="bg-white rounded-xl overflow-hidden drop-shadow-2xl relative hover:scale-105 transition duration-300">

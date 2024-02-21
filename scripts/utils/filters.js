@@ -1,3 +1,5 @@
+import { recipes } from '../../data/recipes.js';
+
 const filtres = [
   "Ingrédients",
   "Appareils",
@@ -7,7 +9,7 @@ const filtres = [
 export function filtresDropDown() {
   for (let i = 0; i < filtres.length; i++) {
     document.getElementById('filtres').innerHTML += `
-        <div div class="w-52 font-medium z-10 relative">
+        <div div class="w-52 font-medium z-10 relative" id="${normalizedFilters(filtres[i])}">
           <div class="bg-white w-full p-4 flex items-center justify-between rounded-xl cursor-pointer btn-dropdown relative">
             ${filtres[i]}
             <i class="fa-solid fa-chevron-down"></i>
@@ -27,30 +29,46 @@ export function filtresDropDown() {
                 </svg>
               </button>
             </div>
-            <li class="p-2 hover:bg-yellow cursor-pointer">Pomme de terre</li>
-            <li class="p-2 hover:bg-yellow cursor-pointer">Oeuf</li>
-            <li class="p-2 hover:bg-yellow cursor-pointer">Sel</li>
-            <li class="p-2 hover:bg-yellow cursor-pointer">Poivre</li>
-            <li class="p-2 hover:bg-yellow cursor-pointer">Huile</li>
-            <li class="p-2 hover:bg-yellow cursor-pointer">Lait</li>
+            ${listItems(filtres[i])}
           </ul>
         </div>
         `
   }
 
-  const dropdownButtons = document.getElementsByClassName('btn-dropdown');
+  function normalizedFilters(filtreName) {
+    return filtreName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+  }
 
-  new Array(...dropdownButtons).forEach(button => {
-    button.addEventListener('click', () => {
-      button.nextElementSibling.classList.toggle('hidden');
-      if (button.classList.contains('rounded-xl')) {
-        button.classList.remove('rounded-xl');
-        button.classList.add('rounded-t-xl');
-      } else {
-        button.classList.remove('rounded-t-xl');
-        button.classList.add('rounded-xl');
+  function listItems(filtreName) {
+    return Array.from(new Set(recipes.map(recipe => {
+      switch (filtreName) {
+        case "Ingrédients":
+          return recipe.ingredients.map(ingredient => ingredient.ingredient);
+        case "Appareils":
+          return recipe.appliance;
+        case "Ustensiles":
+          return recipe.utensils;
       }
-    });
+    }).flat())).sort().map(item => {
+      return `
+        <li class="p-2 hover:bg-yellow cursor-pointer capitalize">${item}</li>
+      `;
+    }).join('');
+  }
+
+  document.addEventListener('click', (event) => {
+    const button = event.target.closest('.btn-dropdown');
+    if (button) {
+      button.nextElementSibling.classList.toggle('hidden');
+      button.classList.toggle('rounded-xl');
+      button.classList.toggle('rounded-t-xl');
+    } else if (!button) {
+      document.querySelectorAll('.btn-dropdown').forEach(btn => {
+        btn.nextElementSibling.classList.add('hidden');
+        btn.classList.remove('rounded-xl');
+        btn.classList.add('rounded-xl');
+      });
+    }
   });
 }
 

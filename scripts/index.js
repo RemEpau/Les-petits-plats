@@ -28,28 +28,32 @@ function search(recipes) {
         e.preventDefault();
         const searchValue = e.target.querySelector('input').value;
         const filteredRecipes = recipes.filter(recipe => {
-            return recipe.name.toLowerCase().includes(searchValue.toLowerCase());
+            const nameMatch = recipe.name.toLowerCase().includes(searchValue.toLowerCase());
+            const ingredientMatch = recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchValue.toLowerCase()));
+            return nameMatch || ingredientMatch
         });
+        console.log(filteredRecipes);
         displayData(filteredRecipes);
     });
 
     inputForm.addEventListener("input", () => {
         if (inputForm.value) {
-            resetForm.classList.remove("invisible");
+            resetForm.classList.remove("text-transparent");
         } else {
-            resetForm.classList.add("invisible");
+            resetForm.classList.add("text-transparent");
+            displayData(recipes);
         }
     });
 
     resetForm.addEventListener("click", () => {
-        resetForm.classList.add("invisible");
+        resetForm.classList.add("text-transparent");
         displayData(recipes);
     });
 }
 
 async function init() {
-    filtresDropDown();
     const recipes = await getRecipes();
+    filtresDropDown();
     displayData(recipes);
     search(recipes);
 }
