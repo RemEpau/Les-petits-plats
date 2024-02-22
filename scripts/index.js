@@ -30,7 +30,8 @@ function search(recipes) {
         const filteredRecipes = recipes.filter(recipe => {
             const nameMatch = recipe.name.toLowerCase().includes(searchValue.toLowerCase());
             const ingredientMatch = recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchValue.toLowerCase()));
-            return nameMatch || ingredientMatch
+            const descriptionMatch = recipe.description.toLowerCase().split(' ').some(word => word === searchValue.toLowerCase());
+            return nameMatch || ingredientMatch || descriptionMatch;
         });
         console.log(filteredRecipes);
         displayData(filteredRecipes);
