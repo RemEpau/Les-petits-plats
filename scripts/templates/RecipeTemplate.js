@@ -1,11 +1,4 @@
-/**
- * Classe représentant un modèle de recette.
- */
 export class RecipeTemplate {
-    /**
-     * Crée une instance de RecipeTemplate.
-     * @param {Object} recipe - Les informations de la recette.
-     */
     constructor(recipe) {
         this._recipe = recipe;
     }
@@ -46,6 +39,7 @@ export class RecipeTemplate {
      * @returns {HTMLElement} - Le DOM des ingrédients de la recette.
      */
     getIngredientsDom() {
+
         // On crée un élément DOM pour la liste des ingrédients
         const ingredientsDiv = new DOMParser().parseFromString(`
         <div id="ingredients" class="grid grid-cols-2 gap-5"></div>
