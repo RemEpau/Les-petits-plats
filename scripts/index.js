@@ -3,7 +3,7 @@ import { filtresDropDown } from './utils/filters.js';
 import { Recipe } from "./models/Recipe.js";
 import { RecipeTemplate } from "./templates/RecipeTemplate.js";
 
-async function getRecipes() {
+async function getRecipesData() {
     return recipes;
 }
 
@@ -19,7 +19,7 @@ async function displayData(recipesData) {
     document.getElementById('total-recipes').innerText = totalRecipes + " recettes";
 }
 
-function search(recipes) {
+function mainSearch(recipes) {
     const searchForm = document.getElementById('main-search');
     const resetForm = document.getElementById('reset-search');
     const inputForm = searchForm.querySelector('input');
@@ -53,10 +53,10 @@ function search(recipes) {
 }
 
 async function init() {
-    const recipes = await getRecipes();
+    const recipesData = await getRecipesData();
     filtresDropDown();
-    displayData(recipes);
-    search(recipes);
+    displayData(recipesData);
+    mainSearch(recipesData);
 }
 
 init();
