@@ -14,7 +14,7 @@ export class RecipeTemplate extends Recipe {
                 <article
                     class="bg-white rounded-xl overflow-hidden drop-shadow-2xl relative hover:scale-105 transition duration-300">
                     <figure class="">
-                        <img src="/images/recettes/${this.image}" alt="Recette ${this.id}" class="object-cover h-80 w-full" />
+                        <img src="/images/recettes/${this.image}" alt="Recette ${this.id}" class="object-cover h-80 w-full" draggable=false />
                     </figure>
                     <span class="absolute top-5 right-5 bg-yellow p-1 px-4 rounded-full text-xs">${this.time}min</span>
                     <div class="px-8 py-8 flex flex-col gap-4" id="description">
@@ -56,7 +56,7 @@ export class RecipeTemplate extends Recipe {
             // On crée un élément DOM pour chaque ingrédient
             const ingredientDom = new DOMParser().parseFromString(`
                 <div>
-                    <h4 class="text-sm capitalize">${ingredient.ingredient}</h4>
+                    <h4 class="text-sm">${ingredient.ingredient}</h4>
                     <p class="text-sm text-grey">${quantity} ${unit}</p>
                 </div>`, "text/html").body.firstChild;
             ingredientsDiv.appendChild(ingredientDom);

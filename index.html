@@ -33,7 +33,7 @@
       </h1>
       <form method="get" class="ml-52 mr-52 relative" id="main-search">
         <label for="search" class="sr-only">Rechercher une recette, un ingrédient, ...</label>
-        <input type="text" name="search" id="search"
+        <input type="text" name="search" id="search" autocomplete="off"
           class="w-full p-5 px-10 ml-2 text-lg text-gray-800 bg-white border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow transition"
           placeholder="Rechercher une recette, un ingrédient, ..." aria-label="Search" />
         <button type="reset"
@@ -54,11 +54,15 @@
     </section>
     <section class="px-20 pt-10">
       <div class="flex justify-between items-center">
-        <!-- Filtres -->
         <div class="flex flex-row gap-10 p-0" id="filtres">
+          <!-- Filtres Dropdowns -->
         </div>
-        <!-- Nombres total de recettes -->
-        <p id="total-recipes" class="font-anton text-black text-xl"></p>
+        <p id="total-recipes" class="font-anton text-black text-xl">
+          <!-- Total amount of recipes -->
+        </p>
+      </div>
+      <div class="flex gap-5 items-center pt-8" id="current-search">
+        <!-- Current filters -->
       </div>
     </section>
     <section class="px-20 grid grid-cols-3 gap-32 pt-12" id="recipes">

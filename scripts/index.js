@@ -17,33 +17,51 @@ async function displayData(recipesData) {
 function mainSearch(recipes) {
     const searchForm = document.getElementById('main-search');
     const resetForm = document.getElementById('reset-search');
-    const inputForm = searchForm.querySelector('input');
 
     searchForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const searchValue = e.target.querySelector('input').value;
-        const filteredRecipes = recipes.filter(recipe => {
-            const nameMatch = recipe.name.toLowerCase().includes(searchValue.toLowerCase());
-            const ingredientMatch = recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchValue.toLowerCase()));
-            const descriptionMatch = recipe.description.toLowerCase().split(' ').some(word => word === searchValue.toLowerCase());
-            return nameMatch || ingredientMatch || descriptionMatch;
-        });
-        displayData(filteredRecipes);
-    });
+        const currentSearchDiv = document.getElementById('current-search');
 
-    inputForm.addEventListener("input", () => {
-        if (inputForm.value) {
-            resetForm.classList.remove("text-transparent");
-        } else {
-            resetForm.classList.add("text-transparent");
-            displayData(recipes);
-        }
+        currentSearchDiv.innerHTML += `
+        <div class="flex items-center justify-center gap-8 bg-yellow pl-4 rounded-xl activeFilter">
+            <p>${searchValue}</p>
+            <button class="p-4">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>`;
+        e.target.querySelector('input').value = "";
     });
 
     resetForm.addEventListener("click", () => {
         resetForm.classList.add("text-transparent");
         displayData(recipes);
     });
+
+    const observer = new MutationObserver(() => {
+        const filteredRecipes = recipes.filter(recipe => {
+            const currentSearchDiv = document.getElementById('current-search');
+            const currentSearchs = Array.from(currentSearchDiv.children).map(div => div.querySelector('p').innerText.toLowerCase());
+            return currentSearchs.every(id => {
+                const lowerCaseId = id.toLowerCase();
+                if (
+                    recipe.name.toLowerCase().includes(lowerCaseId) ||
+                    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(lowerCaseId)) ||
+                    recipe.description.toLowerCase().replace(/<[^>]*>?/gm, '').split(' ').includes(lowerCaseId) ||
+                    recipe.appliance.toLowerCase().includes(lowerCaseId) ||
+                    recipe.utensils.some(utensil => utensil.toLowerCase().includes(lowerCaseId))
+                ) {
+                    console.log(recipe.name, recipe.ingredients, recipe.description, recipe.appliance, recipe.ustensils);
+                    return true;
+                }
+                return false;
+            });
+        });
+        displayData(filteredRecipes);
+    });
+
+    observer.observe(document.getElementById('current-search'), { childList: true });
+
 }
 
 async function init() {

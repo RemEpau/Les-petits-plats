@@ -85,5 +85,13 @@ export function filtresDropDown() {
       event.preventDefault();
     });
   });
+
+  // On ajoute un event listener sur chaque divs de current-search pour les supprimer
+  const currentSearchDiv = document.getElementById('current-search');
+  currentSearchDiv.addEventListener('click', (event) => {
+    if (event.target.closest('div.activeFilter')) {
+      event.target.closest('div.activeFilter').remove();
+    }
+  });
 }
 
