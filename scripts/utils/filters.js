@@ -7,7 +7,7 @@ const filtres = [
 ];
 
 export function filtresDropDown() {
-  for (let i = 0; i < filtres.length; i++) {
+  filtres.forEach((filter, i) => {
     document.getElementById('filtres').innerHTML += `
         <div div class="w-52 font-medium z-10 relative" id="${normalizedFilterName(filtres[i])}">
           <div class="bg-white w-full p-4 flex items-center justify-between rounded-xl cursor-pointer btn-dropdown relative">
@@ -17,7 +17,7 @@ export function filtresDropDown() {
           <ul class="bg-white overflow-y-auto max-h-52 hidden rounded-b-xl absolute">
             <form class="m-2 flex items-center border filters-form">
               <input type="text" class="p-2 w-full">
-              <button>
+              <button type="submit">
                 <svg width="20" height="20" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"
                   class="m-2">
                   <g id="search">
@@ -33,7 +33,7 @@ export function filtresDropDown() {
           </ul>
         </div>
         `
-  }
+  });
 
   function normalizedFilterName(filtreName) {
     return filtreName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");

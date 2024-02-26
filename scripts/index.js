@@ -1,22 +1,17 @@
 import { recipes } from '../data/recipes.js';
 import { filtresDropDown } from './utils/filters.js';
-import { Recipe } from "./models/Recipe.js";
-import { RecipeTemplate } from "./templates/RecipeTemplate.js";
-
-async function getRecipesData() {
-    return recipes;
-}
+import { RecipeTemplate } from "./models/RecipeTemplate.js";
 
 async function displayData(recipesData) {
     const recipesDOM = document.getElementById('recipes');
     recipesDOM.innerHTML = '';
     recipesData.forEach(recipe => {
-        const recipeModel = new RecipeTemplate(new Recipe(recipe));
+        const recipeModel = new RecipeTemplate(recipe);
         const recipeCard = recipeModel.getRecipeCardDOM();
         recipesDOM.appendChild(recipeCard);
     });
     const totalRecipes = recipesData.length;
-    document.getElementById('total-recipes').innerText = totalRecipes + " recettes";
+    document.getElementById('total-recipes').innerText = `${totalRecipes} recette${totalRecipes > 1 ? "s" : ""}`;
 }
 
 function mainSearch(recipes) {
@@ -33,7 +28,6 @@ function mainSearch(recipes) {
             const descriptionMatch = recipe.description.toLowerCase().split(' ').some(word => word === searchValue.toLowerCase());
             return nameMatch || ingredientMatch || descriptionMatch;
         });
-        console.log(filteredRecipes);
         displayData(filteredRecipes);
     });
 
@@ -53,10 +47,9 @@ function mainSearch(recipes) {
 }
 
 async function init() {
-    const recipesData = await getRecipesData();
     filtresDropDown();
-    displayData(recipesData);
-    mainSearch(recipesData);
+    displayData(recipes);
+    mainSearch(recipes);
 }
 
 init();
