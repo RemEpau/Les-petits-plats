@@ -5,8 +5,10 @@ const filtres = [
   "Appareils",
   "Ustensiles"
 ];
+let dropDownCreated = false;
 
-export function filtresDropDown() {
+export function filtresDropDown(currentSearch) {
+  document.getElementById('filtres').innerHTML = '';
   filtres.forEach((filter, i) => {
     document.getElementById('filtres').innerHTML += `
         <div div class="w-52 font-medium z-10 relative" id="${normalizedFilterName(filtres[i])}">
@@ -29,15 +31,11 @@ export function filtresDropDown() {
                 </svg>
               </button>
             </form>
-            ${listItems(filtres[i])}
+            ${listItems(filtres[i], currentSearch)}
           </ul>
         </div>
         `
   });
-
-  function normalizedFilterName(filtreName) {
-    return filtreName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-  }
 
   /*
   * Fonction qui retourne une liste d'items en fonction du nom du filtre
@@ -49,34 +47,72 @@ export function filtresDropDown() {
   * 6. On prend chaqu'un des items que l'on met dans une balise <li>
   * 7. On les met dans un string
   */
-  function listItems(filtreName) {
-    return Array.from(new Set(recipes.map(recipe => {
-      switch (filtreName) {
-        case "Ingrédients":
-          return recipe.ingredients.map(ingredient => ingredient.ingredient.toLowerCase());
-        case "Appareils":
-          return recipe.appliance.toLowerCase();
-        case "Ustensiles":
-          return recipe.utensils.map(ustensil => ustensil.toLowerCase());
-      }
-    }).flat()))
-      .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
-      .map(item => {
-        return `
-        <li class="p-2 hover:bg-yellow cursor-pointer capitalize">${item}</li>
-      `;
-      }).join('');
+  function listItems(filtreName, currentSearch = [""]) {
+    if (currentSearch.length === 0) {
+      return Array.from(new Set(recipes.map(recipe => {
+        switch (filtreName) {
+          case "Ingrédients":
+            return recipe.ingredients
+              .map(ingredient => ingredient.ingredient.toLowerCase());
+          case "Appareils":
+            return [recipe.appliance.toLowerCase()];
+          case "Ustensiles":
+            return recipe.utensils
+              .map(ustensil => ustensil.toLowerCase());
+        }
+      }).flat()))
+        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+        .map(item => {
+          return `
+            <li class="p-2 hover:bg-yellow cursor-pointer capitalize">${item}</li>
+          `;
+        }).join('');
+    } else {
+      return Array.from(new Set(recipes.filter(recipe => {
+        return currentSearch.every(id => {
+          const lowerCaseId = id.toLowerCase();
+          if (
+            recipe.name.toLowerCase().includes(lowerCaseId) ||
+            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(lowerCaseId)) ||
+            recipe.description.toLowerCase().replace(/<[^>]*>?/gm, '').split(' ').includes(lowerCaseId)
+          ) {
+            return true;
+          }
+          return false;
+        });
+      }).map(recipe => {
+        switch (filtreName) {
+          case "Ingrédients":
+            return recipe.ingredients
+              .map(ingredient => ingredient.ingredient.toLowerCase());
+          case "Appareils":
+            return [recipe.appliance.toLowerCase()];
+          case "Ustensiles":
+            return recipe.utensils
+              .map(ustensil => ustensil.toLowerCase());
+        }
+      }).flat()))
+        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+        .map(item => {
+          return `
+                <li class="p-2 hover:bg-yellow cursor-pointer capitalize">${item}</li>
+              `;
+        }).join('');
+    }
   }
 
   // Fonction qui permet d'ouvrir ou de fermer le dropdown
-  document.addEventListener('click', (event) => {
-    const button = event.target.closest('.btn-dropdown');
-    if (button) {
-      button.nextElementSibling.classList.toggle('hidden');
-      button.classList.toggle('rounded-xl');
-      button.classList.toggle('rounded-t-xl');
-    }
-  });
+  if (dropDownCreated === false) {
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('.btn-dropdown');
+      if (button) {
+        button.nextElementSibling.classList.toggle('hidden');
+        button.classList.toggle('rounded-xl');
+        button.classList.toggle('rounded-t-xl');
+      }
+    });
+    dropDownCreated = true;
+  }
 
   // On empêche la soumission des formulaires de filtres
   const filtersForm = document.querySelectorAll('.filters-form');
@@ -89,9 +125,14 @@ export function filtresDropDown() {
   // On ajoute un event listener sur chaque divs de current-search pour les supprimer
   const currentSearchDiv = document.getElementById('current-search');
   currentSearchDiv.addEventListener('click', (event) => {
-    if (event.target.closest('div.activeFilter')) {
-      event.target.closest('div.activeFilter').remove();
+    const activeFilter = event.target.closest('.activeFilter');
+    if (activeFilter) {
+      activeFilter.remove();
     }
   });
+}
+
+function normalizedFilterName(filtreName) {
+  return filtreName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
 
