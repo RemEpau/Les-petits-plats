@@ -65,7 +65,7 @@ export function filtresDropDown(currentSearch) {
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
         .map(item => {
           return `
-            <li class="p-2 hover:bg-yellow cursor-pointer capitalize">${item}</li>
+            <li class="p-2 hover:bg-yellow focus:bg-yellow cursor-pointer capitalize" tabindex="0">${item}</li>
           `;
         }).join('');
     } else {
@@ -96,7 +96,7 @@ export function filtresDropDown(currentSearch) {
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
         .map(item => {
           return `
-                <li class="p-2 hover:bg-yellow cursor-pointer capitalize">${item}</li>
+                <li class="p-2 hover:bg-yellow focus:bg-yellow cursor-pointer capitalize" tabindex="0">${item}</li>
               `;
         }).join('');
     }
@@ -124,7 +124,18 @@ export function filtresDropDown(currentSearch) {
     });
   });
 
-  // Il y as une barre de recherche dans chaque dropdowns de filtres qui permet de filtrer les items de la liste en fonction de la recherche
+
+  // On ajoute un event listener sur chaque input pour filtrer les items
+  // On récupère le nom du filtre
+  // On récupère les items de la liste
+  // On les met en minuscule
+  // On récupère les items de current-search
+  // On récupère la valeur de l'input
+  // On filtre les items de la liste en fonction de la valeur de l'input
+  // Si la valeur de l'input est vide, on enlève la classe hidden
+  // Si la valeur de l'input est dans la liste et n'est pas dans current-search, on enlève la classe hidden
+  // Sinon, on ajoute la classe hidden
+
   const filtersInput = document.querySelectorAll('.filters-form input');
   filtersInput.forEach(input => {
     input.addEventListener('input', (event) => {
