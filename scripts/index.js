@@ -8,9 +8,11 @@ async function displayData(recipesData, searchValue) {
     const noResults = document.getElementById('no-results');
 
     recipesDOM.innerHTML = '';
+    let tabIndex = 4;
     recipesData.forEach(recipe => {
         const recipeModel = new RecipeTemplate(recipe);
-        const recipeCard = recipeModel.getRecipeCardDOM();
+        const recipeCard = recipeModel.getRecipeCardDOM(tabIndex);
+        tabIndex++;
         recipesDOM.appendChild(recipeCard);
     });
     const totalRecipes = recipesData.length;
@@ -18,7 +20,6 @@ async function displayData(recipesData, searchValue) {
 
     if (totalRecipes === 0) {
         noResults.classList.replace("hidden", "flex");
-        console.log(noResults);
         noResults.children[0].innerText = `Aucune recette ne contient "${searchValue.join(' et ')}" vous pouvez chercher « tarte aux pommes », « poisson », etc.`;
     } else {
         noResults.classList.replace("flex", "hidden");
@@ -66,7 +67,6 @@ function mainSearch(recipes) {
                     recipe.appliance.toLowerCase().includes(lowerCaseId) ||
                     recipe.utensils.some(utensil => utensil.toLowerCase().includes(lowerCaseId))
                 ) {
-                    console.log(recipe.name, recipe.ingredients, recipe.description, recipe.appliance, recipe.ustensils);
                     return true;
                 }
                 return false;

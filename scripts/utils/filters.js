@@ -12,7 +12,7 @@ export function filtresDropDown(currentSearch) {
   document.getElementById('filtres').innerHTML = '';
   filtres.forEach((filter, i) => {
     document.getElementById('filtres').innerHTML += `
-        <div div class="w-52 font-medium z-10 relative" id="${normalizedFilterName(filtres[i])}">
+        <div div class="w-52 font-medium z-10 relative" id="${normalizedFilterName(filtres[i])}" tabindex="3">
           <div class="bg-white w-full p-4 flex items-center justify-between rounded-xl cursor-pointer btn-dropdown relative">
             ${filtres[i]}
             <i class="fa-solid fa-chevron-down"></i>
@@ -48,19 +48,25 @@ export function filtresDropDown(currentSearch) {
   * 6. On prend chaqu'un des items que l'on met dans une balise <li>
   * 7. On les met dans un string
   */
-  function listItems(filtreName, currentSearch = [""]) {
+  function listItems(filtreName, currentSearch = []) {
+    console.log('currentSearch:', currentSearch);
     if (currentSearch.length === 0) {
       return Array.from(new Set(recipes.map(recipe => {
+        let items;
         switch (filtreName) {
           case "Ingrédients":
-            return recipe.ingredients
-              .map(ingredient => ingredient.ingredient.toLowerCase());
+            items = recipe.ingredients.map(ingredient => ingredient.ingredient.toLowerCase());
+            break;
           case "Appareils":
-            return [recipe.appliance.toLowerCase()];
+            console.log('Appliance:', recipe.appliance);
+            items = [recipe.appliance.toLowerCase()];
+            break;
           case "Ustensiles":
-            return recipe.utensils
-              .map(ustensil => ustensil.toLowerCase());
+            console.log('Utensils:', recipe.utensils);
+            items = recipe.utensils.map(ustensil => ustensil.toLowerCase());
+            break;
         }
+        return items;
       }).flat()))
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
         .map(item => {
@@ -75,23 +81,27 @@ export function filtresDropDown(currentSearch) {
           if (
             recipe.name.toLowerCase().includes(lowerCaseId) ||
             recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(lowerCaseId)) ||
-            recipe.description.toLowerCase().replace(/<[^>]*>?/gm, '').split(' ').includes(lowerCaseId)
+            recipe.description.toLowerCase().replace(/<[^>]*>?/gm, '').split(' ').includes(lowerCaseId) ||
+            recipe.appliance.toLowerCase().includes(lowerCaseId) ||
+            recipe.utensils.some(utensil => utensil.toLowerCase().includes(lowerCaseId))
           ) {
             return true;
           }
           return false;
         });
       }).map(recipe => {
+        let items;
         switch (filtreName) {
           case "Ingrédients":
-            return recipe.ingredients
-              .map(ingredient => ingredient.ingredient.toLowerCase());
+            items = recipe.ingredients.map(ingredient => ingredient.ingredient.toLowerCase());
+            break;
           case "Appareils":
-            return [recipe.appliance.toLowerCase()];
+            items = [recipe.appliance.toLowerCase()];
+            break;
           case "Ustensiles":
-            return recipe.utensils
-              .map(ustensil => ustensil.toLowerCase());
+            items = recipe.utensils.map(ustensil => ustensil.toLowerCase());
         }
+        return items;
       }).flat()))
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
         .map(item => {

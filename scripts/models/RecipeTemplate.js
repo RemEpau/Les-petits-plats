@@ -9,10 +9,12 @@ export class RecipeTemplate extends Recipe {
      * Récupère le DOM de la carte de recette.
      * @returns {HTMLElement} - Le DOM de la carte de recette.
      */
-    getRecipeCardDOM() {
+    getRecipeCardDOM(i) {
         const recipeCard = new DOMParser().parseFromString(`
                 <article
-                    class="bg-white rounded-xl overflow-hidden drop-shadow-2xl relative hover:scale-105 transition duration-300">
+                    class="bg-white rounded-xl overflow-hidden drop-shadow-2xl relative hover:scale-105 transition duration-300"
+                    tabindex="${i}"
+                >
                     <figure class="">
                         <img src="/images/recettes/${this.image}" alt="Recette ${this.id}" class="object-cover h-80 w-full" draggable=false />
                     </figure>
@@ -21,7 +23,7 @@ export class RecipeTemplate extends Recipe {
                         <h2 class="font-anton text-lg text-black pb-2">${this.name}</h2>
                         <h3 class="text-xs text-grey uppercase tracking-widest font-bold">Recette</h3>
                         <p class="text-sm overflow-hidden max-h-16 overflow-ellipsis">
-                                ${this.description}
+                            ${this.description}
                         </p>
                         <h3 class="text-xs text-grey uppercase tracking-widest font-bold">Ingrédients</h3>
                     </div>
