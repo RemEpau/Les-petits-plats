@@ -1,6 +1,7 @@
 import { recipes } from '../data/recipes.js';
 import { filtresDropDown } from './utils/filters.js';
 import { RecipeTemplate } from "./models/RecipeTemplate.js";
+import { listItemSearch } from './utils/filters.js';
 
 async function displayData(recipesData, searchValue) {
     const recipesDOM = document.getElementById('recipes');
@@ -61,7 +62,9 @@ function mainSearch(recipes) {
                 if (
                     recipe.name.toLowerCase().includes(lowerCaseId) ||
                     recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(lowerCaseId)) ||
-                    recipe.description.toLowerCase().replace(/<[^>]*>?/gm, '').split(' ').includes(lowerCaseId)
+                    recipe.description.toLowerCase().replace(/<[^>]*>?/gm, '').split(' ').includes(lowerCaseId) ||
+                    recipe.appliance.toLowerCase().includes(lowerCaseId) ||
+                    recipe.utensils.some(utensil => utensil.toLowerCase().includes(lowerCaseId))
                 ) {
                     console.log(recipe.name, recipe.ingredients, recipe.description, recipe.appliance, recipe.ustensils);
                     return true;
@@ -79,6 +82,7 @@ function mainSearch(recipes) {
 async function init() {
     displayData(recipes);
     mainSearch(recipes);
+    listItemSearch();
 }
 
 init();

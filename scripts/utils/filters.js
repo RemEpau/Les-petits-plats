@@ -1,4 +1,5 @@
 import { recipes } from '../../data/recipes.js';
+import { normalizedFilterName } from './normalized.js';
 
 const filtres = [
   "Ingrédients",
@@ -101,6 +102,7 @@ export function filtresDropDown(currentSearch) {
     }
   }
 
+
   // Fonction qui permet d'ouvrir ou de fermer le dropdown
   if (dropDownCreated === false) {
     document.addEventListener('click', (event) => {
@@ -122,17 +124,51 @@ export function filtresDropDown(currentSearch) {
     });
   });
 
-  // On ajoute un event listener sur chaque divs de current-search pour les supprimer
+  // Il y as une barre de recherche dans chaque dropdowns de filtres qui permet de filtrer les items de la liste en fonction de la recherche
+  const filtersInput = document.querySelectorAll('.filters-form input');
+  filtersInput.forEach(input => {
+    input.addEventListener('input', (event) => {
+      const filterName = event.target.closest('.relative').id;
+      const currentSearchDiv = document.getElementById('current-search');
+      const currentSearchs = Array.from(currentSearchDiv.children).map(div => div.querySelector('p').innerText.toLowerCase());
+      const searchValue = event.target.value.toLowerCase();
+      const listItems = document.querySelectorAll(`#${filterName} ul li`);
+      listItems.forEach(item => {
+        const itemValue = item.innerText.toLowerCase();
+        if (searchValue === '') {
+          item.classList.remove('hidden');
+        } else if (itemValue.includes(searchValue) && !currentSearchs.includes(itemValue)) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+
+  // On ajoute un event listener sur chaque button dans les divs de current-search pour les supprimer
   const currentSearchDiv = document.getElementById('current-search');
   currentSearchDiv.addEventListener('click', (event) => {
-    const activeFilter = event.target.closest('.activeFilter');
-    if (activeFilter) {
-      activeFilter.remove();
+    const button = event.target.closest('button');
+    if (button) {
+      button.parentElement.remove();
     }
   });
 }
 
-function normalizedFilterName(filtreName) {
-  return filtreName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+export function listItemSearch() {
+  const currentSearchDiv = document.getElementById('current-search');
+  document.addEventListener('click', (event) => {
+    const item = event.target.closest('li');
+    if (item) {
+      currentSearchDiv.innerHTML += `
+        <div class="flex items-center justify-center gap-8 bg-yellow pl-4 rounded-xl activeFilter">
+          <p>${item.innerText}</p>
+          <button class="p-4">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>`;
+    }
+  });
 }
-
