@@ -47,6 +47,9 @@ export function filtresDropDown(currentSearch) {
   * 5. On les range par ordre alphabétique, incluant les accents
   * 6. On prend chaqu'un des items que l'on met dans une balise <li>
   * 7. On les met dans un string
+  * 8. On retourne le string
+  * Au sinon, on fait la même chose, mais on filtre les items en fonction de la valeur de l'input
+  * Si la valeur de l'input est vide, on retourne tous les items
   */
   function listItems(filtreName, currentSearch = []) {
     console.log('currentSearch:', currentSearch);
@@ -113,39 +116,24 @@ export function filtresDropDown(currentSearch) {
   }
 
 
-  // Fonction qui permet d'ouvrir ou de fermer le dropdown
-  if (dropDownCreated === false) {
-    document.addEventListener('click', (event) => {
-      const button = event.target.closest('.btn-dropdown');
-      if (button) {
-        button.nextElementSibling.classList.toggle('hidden');
-        button.classList.toggle('rounded-xl');
-        button.classList.toggle('rounded-t-xl');
-      }
-    });
-    dropDownCreated = true;
-  }
-
-  // On empêche la soumission des formulaires de filtres
-  const filtersForm = document.querySelectorAll('.filters-form');
-  filtersForm.forEach(form => {
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-    });
-  });
-
-
-  // On ajoute un event listener sur chaque input pour filtrer les items
-  // On récupère le nom du filtre
-  // On récupère les items de la liste
-  // On les met en minuscule
-  // On récupère les items de current-search
-  // On récupère la valeur de l'input
-  // On filtre les items de la liste en fonction de la valeur de l'input
-  // Si la valeur de l'input est vide, on enlève la classe hidden
-  // Si la valeur de l'input est dans la liste et n'est pas dans current-search, on enlève la classe hidden
-  // Sinon, on ajoute la classe hidden
-
+  /*
+  *1. On ajoute un event listener sur chaque input pour filtrer les items
+  *2. On récupère le nom du filtre
+  *3. On récupère les divs de current-search
+  *4. On récupère les p de chaque div
+  *5. On les met dans un tableau
+  *6. On les met en minuscule
+  *7. On récupère la valeur de l'input
+  *8. On récupère tous les items de la liste
+  *9. On les mappe
+  *10. On récupère la valeur de chaque item
+  *11. On les met en minuscule
+  *12. On vérifie si la valeur de l'input est vide
+  *13. Si c'est le cas, on enlève la classe hidden
+  *14. Sinon, on vérifie si la valeur de l'input est incluse dans la valeur de l'item
+  *15. Si c'est le cas, on enlève la classe hidden
+  *16. Sinon, on ajoute la classe hidden
+  */
   const filtersInput = document.querySelectorAll('.filters-form input');
   filtersInput.forEach(input => {
     input.addEventListener('input', (event) => {
@@ -167,6 +155,26 @@ export function filtresDropDown(currentSearch) {
     });
   });
 
+  // Fonction qui permet d'ouvrir ou de fermer le dropdown
+  if (dropDownCreated === false) {
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('.btn-dropdown');
+      if (button) {
+        button.nextElementSibling.classList.toggle('hidden');
+        button.classList.toggle('rounded-xl');
+        button.classList.toggle('rounded-t-xl');
+      }
+    });
+    dropDownCreated = true;
+  }
+
+  // On empêche la soumission des formulaires de filtres
+  const filtersForm = document.querySelectorAll('.filters-form');
+  filtersForm.forEach(form => {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+    });
+  });
 
   // On ajoute un event listener sur chaque button dans les divs de current-search pour les supprimer
   const currentSearchDiv = document.getElementById('current-search');
@@ -178,7 +186,8 @@ export function filtresDropDown(currentSearch) {
   });
 }
 
-export function listItemSearch() {
+// Fonction qui permet d'ajouter un item à la liste de recherche actuelle
+export function addListItemToCurrentSearch() {
   const currentSearchDiv = document.getElementById('current-search');
   document.addEventListener('click', (event) => {
     const item = event.target.closest('li');

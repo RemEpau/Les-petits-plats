@@ -1,7 +1,7 @@
 import { recipes } from '../data/recipes.js';
 import { filtresDropDown } from './utils/filters.js';
 import { RecipeTemplate } from "./models/RecipeTemplate.js";
-import { listItemSearch } from './utils/filters.js';
+import { addListItemToCurrentSearch } from './utils/filters.js';
 
 async function displayData(recipesData, searchValue) {
     const recipesDOM = document.getElementById('recipes');
@@ -82,7 +82,7 @@ function mainSearch(recipes) {
 async function init() {
     displayData(recipes);
     mainSearch(recipes);
-    listItemSearch();
+    addListItemToCurrentSearch();
 }
 
 init();
