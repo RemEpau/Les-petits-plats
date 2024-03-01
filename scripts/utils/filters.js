@@ -53,6 +53,7 @@ export function filtresDropDown(currentSearch) {
   */
   function listItems(filtreName, currentSearch = []) {
     console.log('currentSearch:', currentSearch);
+    // Si la recherche est vide, on retourne tous les items
     if (currentSearch.length === 0) {
       return Array.from(new Set(recipes.map(recipe => {
         let items;
@@ -77,14 +78,14 @@ export function filtresDropDown(currentSearch) {
             <li class="p-2 sm:text-base text-sm hover:bg-yellow focus:bg-yellow cursor-pointer capitalize" tabindex="0">${item}</li>
           `;
         }).join('');
-    } else {
+    }
+    // Sinon, on filtre les items en fonction de la valeur de l'input
+    else {
       return Array.from(new Set(recipes.filter(recipe => {
         return currentSearch.every(id => {
           const lowerCaseId = id.toLowerCase();
           if (
-            recipe.name.toLowerCase().includes(lowerCaseId) ||
             recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(lowerCaseId)) ||
-            recipe.description.toLowerCase().replace(/<[^>]*>?/gm, '').split(' ').includes(lowerCaseId) ||
             recipe.appliance.toLowerCase().includes(lowerCaseId) ||
             recipe.utensils.some(utensil => utensil.toLowerCase().includes(lowerCaseId))
           ) {

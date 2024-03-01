@@ -34,7 +34,6 @@ function mainSearch(recipes) {
     searchForm.addEventListener("input", (e) => {
         if (e.target.value.length > 0) {
             resetForm.classList.remove("text-transparent");
-            resetForm.children[0].innerText = `Réinitialiser la recherche`;
         } else {
             resetForm.classList.add("text-transparent");
         }
