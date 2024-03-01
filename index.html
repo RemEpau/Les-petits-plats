@@ -14,7 +14,7 @@
 
 <body class="bg-[#ededed] pb-24">
   <header class="absolute h-[667px] mx-auto">
-    <nav class="pt-10 pl-20">
+    <nav class="pt-10 sm:pl-20 pl-[25svw]">
       <a href="./" class="flex p-3 justify-center items-end gap-1 shrink-0 focus:outline-none
         focus:ring-2 focus:ring-yellow rounded-lg" tabindex="1" aria-label="Retour à l'accueil
       ">
@@ -24,24 +24,25 @@
     </nav>
   </header>
   <main>
-    <section class="hero flex flex-col justify-center items-stretch h-full pt-48 pb-48">
+    <section class="hero flex flex-col justify-center items-stretch h-full sm:pt-48 sm:pb-48 pt-32 pb-32">
       <h1
-        class="flex items-center justify-center font-bold text-yellow font-anton text-5xl text-center mb-10 leading-normal">
+        class="flex items-center justify-center sm:font-bold font-medium text-yellow font-anton sm:text-5xl text-3xl text-center mb-10 leading-normal">
         CHERCHEZ PARMI PLUS DE 1500 RECETTES
         <br />
         DU QUOTIDIEN, SIMPLES ET DÉLICIEUSES
       </h1>
-      <form method="get" class="ml-52 mr-52 relative" id="main-search">
+      <form method="get" class="sm:ml-52 sm:mr-52 ml-10 mr-10 relative" id="main-search">
         <label for="search" class="sr-only">Rechercher une recette, un ingrédient, ...</label>
         <input type="text" name="search" id="search" autocomplete="off"
-          class="w-full p-5 px-10 ml-2 text-lg text-gray-800 bg-white border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow transition"
-          placeholder="Rechercher une recette, un ingrédient, ..." aria-label="Search" tabindex="2" />
+          class="w-full p-5 sm:px-10 px-5 pr-20 ml-2 sm:text-lg text-sm text-gray-800 bg-white border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow transition overflow-ellipsis overflow-hidden whitespace-nowrap"
+          placeholder="Rechercher une recette, un ingrédient,..." aria-label="Search" tabindex="2" />
         <button type="reset"
-          class="w-[50px] h-[50px] absolute right-16 top-2 fa-solid fa-xmark text-2xl text-transparent transition"
+          class="sm:w-[50px] sm:h-[50px] w-[30px] h-[30px] absolute sm:right-16 sm:top-2 right-10 top-3.5 fa-solid fa-xmark sm:text-2xl text-lg text-transparent transition"
           id="reset-search"></button>
         <button type="submit"
-          class="group w-[50px] h-[50px] text-lg text-white bg-black rounded-lg flex items-center justify-center absolute right-2 top-2 hover:bg-yellow transition">
-          <svg width="28" height="29" viewBox="0 0 28 29" fill="none" xmlns="http://www.w3.org/2000/svg" class="">
+          class="group sm:w-[50px] sm:h-[50px] w-[30px] h-[30px] text-lg text-white bg-black rounded-lg flex items-center justify-center absolute right-2 sm:top-2 top-3.5 hover:bg-yellow transition">
+          <svg width="28" height="29" viewBox="0 0 28 29" fill="none" xmlns="http://www.w3.org/2000/svg"
+            class="sm:w-7 sm:h-7 w-4 h-4">
             <g id="search">
               <circle id="Ellipse" cx="10" cy="10.4219" r="9.5" stroke="white"
                 class="group-hover:stroke-black transition" />
@@ -52,23 +53,24 @@
         </button>
       </form>
     </section>
-    <section class="px-20 pt-10">
-      <div class="flex justify-between items-center">
-        <div class="flex flex-row gap-10 p-0" id="filtres">
+    <section class="sm:px-20 px-5 pt-10" id="selection">
+      <div class="flex justify-between items-center xl:flex-row flex-col">
+        <div class="flex flex-row sm:gap-10 gap-2" id="filtres">
           <!-- Filtres Dropdowns -->
         </div>
         <p id="total-recipes" class="font-anton text-black text-xl">
           <!-- Total amount of recipes -->
         </p>
       </div>
-      <div class="flex gap-5 items-center pt-8" id="current-search">
+      <div class="flex gap-5 items-center pt-8 overflow-scroll" id="current-search">
         <!-- Current filters -->
       </div>
     </section>
-    <section class="grid px-20 grid-cols-3 gap-32 pt-12" id="recipes">
+    <section class="grid sm:px-20 px-5 sm:grid-cols-2 lg:grid-cols-3 grid-cols-1 sm:gap-32 gap-10 sm:pt-12 pt-5"
+      id="recipes">
       <!-- Recettes -->
     </section>
-    <div id="no-results" class="flex-col items-center hidden">
+    <div class="flex-col items-center hidden" id="no-results">
       <p class="text-gray-700 text-xl p-10 font-bold"></p>
     </div>
   </main>

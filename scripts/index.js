@@ -31,19 +31,29 @@ function mainSearch(recipes) {
     const searchForm = document.getElementById('main-search');
     const resetForm = document.getElementById('reset-search');
 
+    searchForm.addEventListener("input", (e) => {
+        if (e.target.value.length > 0) {
+            resetForm.classList.remove("text-transparent");
+            resetForm.children[0].innerText = `Réinitialiser la recherche`;
+        } else {
+            resetForm.classList.add("text-transparent");
+        }
+    });
+
     searchForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const searchValue = e.target.querySelector('input').value;
         const currentSearchDiv = document.getElementById('current-search');
 
         currentSearchDiv.innerHTML += `
-        <div class="flex items-center justify-center gap-8 bg-yellow pl-4 rounded-xl activeFilter">
-            <p>${searchValue}</p>
+        <div class="flex items-center justify-center gap-8 bg-yellow pl-4 rounded-xl activeFilter sm:text-base text-sm">
+            <p class="whitespace-nowrap">${searchValue}</p>
             <button class="p-4">
                 <i class="fas fa-times"></i>
             </button>
         </div>`;
         e.target.querySelector('input').value = "";
+        resetForm.classList.add("text-transparent");
     });
 
     resetForm.addEventListener("click", () => {

@@ -12,8 +12,8 @@ export function filtresDropDown(currentSearch) {
   document.getElementById('filtres').innerHTML = '';
   filtres.forEach((filter, i) => {
     document.getElementById('filtres').innerHTML += `
-        <div div class="w-52 font-medium z-10 relative" id="${normalizedFilterName(filtres[i])}" tabindex="3">
-          <div class="bg-white w-full p-4 flex items-center justify-between rounded-xl cursor-pointer btn-dropdown relative">
+        <div div class="sm:w-52 w-32 flex-1 mb-5 font-medium z-10 relative" id="${normalizedFilterName(filtres[i])}" tabindex="3"> 
+          <div class="bg-white w-full sm:text-base text-sm p-4 flex items-center justify-between rounded-xl cursor-pointer btn-dropdown relative">
             ${filtres[i]}
             <i class="fa-solid fa-chevron-down"></i>
           </div>
@@ -74,7 +74,7 @@ export function filtresDropDown(currentSearch) {
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
         .map(item => {
           return `
-            <li class="p-2 hover:bg-yellow focus:bg-yellow cursor-pointer capitalize" tabindex="0">${item}</li>
+            <li class="p-2 sm:text-base text-sm hover:bg-yellow focus:bg-yellow cursor-pointer capitalize" tabindex="0">${item}</li>
           `;
         }).join('');
     } else {
@@ -109,7 +109,7 @@ export function filtresDropDown(currentSearch) {
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
         .map(item => {
           return `
-                <li class="p-2 hover:bg-yellow focus:bg-yellow cursor-pointer capitalize" tabindex="0">${item}</li>
+                <li class="p-2 hover:bg-yellow sm:text-base text-sm focus:bg-yellow cursor-pointer capitalize" tabindex="0">${item}</li>
               `;
         }).join('');
     }
@@ -193,8 +193,8 @@ export function addListItemToCurrentSearch() {
     const item = event.target.closest('li');
     if (item) {
       currentSearchDiv.innerHTML += `
-        <div class="flex items-center justify-center gap-8 bg-yellow pl-4 rounded-xl activeFilter">
-          <p>${item.innerText}</p>
+        <div class="flex items-center justify-center gap-8 bg-yellow pl-4 rounded-xl activeFilter sm:text-base text-sm">
+          <p class="whitespace-nowrap">${item.innerText}</p>
           <button class="p-4">
             <i class="fas fa-times"></i>
           </button>
