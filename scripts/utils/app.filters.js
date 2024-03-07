@@ -38,58 +38,106 @@ export function filtresDropDown(currentSearch) {
   function listItems(filtreName, currentSearch = []) {
     // Si la recherche est vide, on retourne tous les items
     if (currentSearch.length === 0) {
-      return Array.from(new Set(recipes.map(recipe => {
-        let items;
+      let items = [];
+      for (let i = 0; i < recipes.length; i++) {
+        let recipe = recipes[i];
+        let recipeItems;
         switch (filtreName) {
           case "Ingrédients":
-            items = recipe.ingredients.map(ingredient => ingredient.ingredient.toLowerCase());
+            recipeItems = [];
+            for (let j = 0; j < recipe.ingredients.length; j++) {
+              let ingredient = recipe.ingredients[j];
+              recipeItems.push(ingredient.ingredient.toLowerCase());
+            }
             break;
           case "Appareils":
-            items = [recipe.appliance.toLowerCase()];
+            recipeItems = [recipe.appliance.toLowerCase()];
             break;
           case "Ustensiles":
-            items = recipe.utensils.map(ustensil => ustensil.toLowerCase());
+            recipeItems = [];
+            for (let j = 0; j < recipe.utensils.length; j++) {
+              let utensil = recipe.utensils[j];
+              recipeItems.push(utensil.toLowerCase());
+            }
             break;
         }
-        return items;
-      }).flat()))
+        items.push(...recipeItems);
+      }
+      items = Array.from(new Set(items))
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
         .map(item => {
           return `
             <li class="p-2 sm:text-base text-sm hover:bg-yellow focus:bg-yellow cursor-pointer capitalize" tabindex="0">${item}</li>
           `;
         }).join('');
+      return items;
     }
     // Sinon, on filtre les items en fonction de la valeur de l'input
     else {
-      return Array.from(new Set(recipes.filter(recipe => {
-        return currentSearch.every(id => {
-          return (
-            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(id.toLowerCase())) ||
-            recipe.appliance.toLowerCase().includes(id.toLowerCase()) ||
-            recipe.utensils.some(utensil => utensil.toLowerCase().includes(id.toLowerCase()))
-          );
+      let items = [];
+      for (let i = 0; i < recipes.length; i++) {
+        let recipe = recipes[i];
+        let recipeItems;
+        let includeRecipe = currentSearch.every(id => {
+          let includeItem = false;
+          switch (filtreName) {
+            case "Ingrédients":
+              for (let j = 0; j < recipe.ingredients.length; j++) {
+                let ingredient = recipe.ingredients[j];
+                if (ingredient.ingredient.toLowerCase().includes(id.toLowerCase())) {
+                  includeItem = true;
+                  break;
+                }
+              }
+              break;
+            case "Appareils":
+              if (recipe.appliance.toLowerCase().includes(id.toLowerCase())) {
+                includeItem = true;
+              }
+              break;
+            case "Ustensiles":
+              for (let j = 0; j < recipe.utensils.length; j++) {
+                let utensil = recipe.utensils[j];
+                if (utensil.toLowerCase().includes(id.toLowerCase())) {
+                  includeItem = true;
+                  break;
+                }
+              }
+              break;
+          }
+          return includeItem;
         });
-      }).map(recipe => {
-        let items;
-        switch (filtreName) {
-          case "Ingrédients":
-            items = recipe.ingredients.map(ingredient => ingredient.ingredient.toLowerCase());
-            break;
-          case "Appareils":
-            items = [recipe.appliance.toLowerCase()];
-            break;
-          case "Ustensiles":
-            items = recipe.utensils.map(ustensil => ustensil.toLowerCase());
+        if (includeRecipe) {
+          switch (filtreName) {
+            case "Ingrédients":
+              recipeItems = [];
+              for (let j = 0; j < recipe.ingredients.length; j++) {
+                let ingredient = recipe.ingredients[j];
+                recipeItems.push(ingredient.ingredient.toLowerCase());
+              }
+              break;
+            case "Appareils":
+              recipeItems = [recipe.appliance.toLowerCase()];
+              break;
+            case "Ustensiles":
+              recipeItems = [];
+              for (let j = 0; j < recipe.utensils.length; j++) {
+                let utensil = recipe.utensils[j];
+                recipeItems.push(utensil.toLowerCase());
+              }
+              break;
+          }
+          items.push(...recipeItems);
         }
-        return items;
-      }).flat()))
+      }
+      items = Array.from(new Set(items))
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
         .map(item => {
           return `
                 <li class="p-2 hover:bg-yellow sm:text-base text-sm focus:bg-yellow cursor-pointer capitalize" tabindex="0">${item}</li>
               `;
         }).join('');
+      return items;
     }
   }
 
