@@ -1,4 +1,4 @@
-import { Recipe } from "./Recipe.js";
+import { Recipe } from "./app.class.Recipe.js";
 
 export class RecipeTemplate extends Recipe {
     constructor(recipe) {
@@ -52,14 +52,12 @@ export class RecipeTemplate extends Recipe {
         this.ingredients.forEach(ingredient => {
 
             // Si l'ingrédient n'a pas de quantité ou d'unité, on les remplace par une chaine vide
-            const quantity = ingredient.quantity || '';
-            const unit = ingredient.unit || '';
 
             // On crée un élément DOM pour chaque ingrédient
             const ingredientDom = new DOMParser().parseFromString(`
                 <div>
                     <h4 class="text-sm">${ingredient.ingredient}</h4>
-                    <p class="text-sm text-grey">${quantity} ${unit}</p>
+                    <p class="text-sm text-grey">${ingredient.quantity || ''} ${ingredient.unit || ''}</p>
                 </div>`, "text/html").body.firstChild;
             ingredientsDiv.appendChild(ingredientDom);
         });

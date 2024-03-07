@@ -1,20 +1,16 @@
 import { recipes } from '../../data/recipes.js';
-import { normalizedFilterName } from './normalized.js';
+import { normalizedFilterName } from './app.utils.js';
+import { FILTERS } from '../constants/app.contants.js';
 
-const filtres = [
-  "Ingrédients",
-  "Appareils",
-  "Ustensiles"
-];
 let dropDownCreated = false;
 
 export function filtresDropDown(currentSearch) {
   document.getElementById('filtres').innerHTML = '';
-  filtres.forEach((filter, i) => {
+  FILTERS.forEach((filter, i) => {
     document.getElementById('filtres').innerHTML += `
-        <div div class="sm:w-52 w-32 flex-1 mb-5 font-medium z-10 relative" id="${normalizedFilterName(filtres[i])}" tabindex="3"> 
+        <div div class="sm:w-52 w-32 flex-1 mb-5 font-medium z-10 relative" id="${normalizedFilterName(FILTERS[i])}" tabindex="3"> 
           <div class="bg-white w-full sm:text-base text-sm p-4 flex items-center justify-between rounded-xl cursor-pointer btn-dropdown relative">
-            ${filtres[i]}
+            ${FILTERS[i]}
             <i class="fa-solid fa-chevron-down"></i>
           </div>
           <ul class="bg-white overflow-y-auto max-h-52 hidden rounded-b-xl absolute">
@@ -32,27 +28,14 @@ export function filtresDropDown(currentSearch) {
                 </svg>
               </button>
             </form>
-            ${listItems(filtres[i], currentSearch)}
+            ${listItems(FILTERS[i], currentSearch)}
           </ul>
         </div>
         `
   });
 
-  /*
-  * Fonction qui retourne une liste d'items en fonction du nom du filtre
-  * 1. On mappe les items en fonction du filtre, on les met en minuscule
-  * 2. On les fait passer dans un Set pour ne pas avoir de doublons
-  * 3. On les remet dans un tableau avec Array.from
-  * 4. On flat le tableau pour avoir un seul tableau
-  * 5. On les range par ordre alphabétique, incluant les accents
-  * 6. On prend chaqu'un des items que l'on met dans une balise <li>
-  * 7. On les met dans un string
-  * 8. On retourne le string
-  * Au sinon, on fait la même chose, mais on filtre les items en fonction de la valeur de l'input
-  * Si la valeur de l'input est vide, on retourne tous les items
-  */
+  // Fonction qui permet de lister les items en fonction du filtre
   function listItems(filtreName, currentSearch = []) {
-    console.log('currentSearch:', currentSearch);
     // Si la recherche est vide, on retourne tous les items
     if (currentSearch.length === 0) {
       return Array.from(new Set(recipes.map(recipe => {
@@ -62,11 +45,9 @@ export function filtresDropDown(currentSearch) {
             items = recipe.ingredients.map(ingredient => ingredient.ingredient.toLowerCase());
             break;
           case "Appareils":
-            console.log('Appliance:', recipe.appliance);
             items = [recipe.appliance.toLowerCase()];
             break;
           case "Ustensiles":
-            console.log('Utensils:', recipe.utensils);
             items = recipe.utensils.map(ustensil => ustensil.toLowerCase());
             break;
         }
@@ -83,15 +64,11 @@ export function filtresDropDown(currentSearch) {
     else {
       return Array.from(new Set(recipes.filter(recipe => {
         return currentSearch.every(id => {
-          const lowerCaseId = id.toLowerCase();
-          if (
-            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(lowerCaseId)) ||
-            recipe.appliance.toLowerCase().includes(lowerCaseId) ||
-            recipe.utensils.some(utensil => utensil.toLowerCase().includes(lowerCaseId))
-          ) {
-            return true;
-          }
-          return false;
+          return (
+            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(id.toLowerCase())) ||
+            recipe.appliance.toLowerCase().includes(id.toLowerCase()) ||
+            recipe.utensils.some(utensil => utensil.toLowerCase().includes(id.toLowerCase()))
+          );
         });
       }).map(recipe => {
         let items;
@@ -116,38 +93,15 @@ export function filtresDropDown(currentSearch) {
     }
   }
 
-
-  /*
-  *1. On ajoute un event listener sur chaque input pour filtrer les items
-  *2. On récupère le nom du filtre
-  *3. On récupère les divs de current-search
-  *4. On récupère les p de chaque div
-  *5. On les met dans un tableau
-  *6. On les met en minuscule
-  *7. On récupère la valeur de l'input
-  *8. On récupère tous les items de la liste
-  *9. On les mappe
-  *10. On récupère la valeur de chaque item
-  *11. On les met en minuscule
-  *12. On vérifie si la valeur de l'input est vide
-  *13. Si c'est le cas, on enlève la classe hidden
-  *14. Sinon, on vérifie si la valeur de l'input est incluse dans la valeur de l'item
-  *15. Si c'est le cas, on enlève la classe hidden
-  *16. Sinon, on ajoute la classe hidden
-  */
-  const filtersInput = document.querySelectorAll('.filters-form input');
-  filtersInput.forEach(input => {
+  // Fonction qui permet de filtrer les items en fonction de la valeur de l'input
+  document.querySelectorAll('.filters-form input').forEach(input => {
     input.addEventListener('input', (event) => {
-      const filterName = event.target.closest('.relative').id;
-      const currentSearchDiv = document.getElementById('current-search');
-      const currentSearchs = Array.from(currentSearchDiv.children).map(div => div.querySelector('p').innerText.toLowerCase());
-      const searchValue = event.target.value.toLowerCase();
-      const listItems = document.querySelectorAll(`#${filterName} ul li`);
-      listItems.forEach(item => {
+      // On filtre les items en fonction de la valeur de l'input
+      document.querySelectorAll(`#${event.target.closest('.relative').id} ul li`).forEach(item => {
         const itemValue = item.innerText.toLowerCase();
-        if (searchValue === '') {
+        if (event.target.value.toLowerCase() === '') {
           item.classList.remove('hidden');
-        } else if (itemValue.includes(searchValue) && !currentSearchs.includes(itemValue)) {
+        } else if (itemValue.includes(event.target.value.toLowerCase()) && !Array.from(document.getElementById('current-search').children).map(div => div.querySelector('p').innerText.toLowerCase()).includes(itemValue)) {
           item.classList.remove('hidden');
         } else {
           item.classList.add('hidden');
@@ -170,32 +124,27 @@ export function filtresDropDown(currentSearch) {
   }
 
   // On empêche la soumission des formulaires de filtres
-  const filtersForm = document.querySelectorAll('.filters-form');
-  filtersForm.forEach(form => {
+  document.querySelectorAll('.filters-form').forEach(form => {
     form.addEventListener('submit', (event) => {
       event.preventDefault();
     });
   });
 
   // On ajoute un event listener sur chaque button dans les divs de current-search pour les supprimer
-  const currentSearchDiv = document.getElementById('current-search');
-  currentSearchDiv.addEventListener('click', (event) => {
-    const button = event.target.closest('button');
-    if (button) {
-      button.parentElement.remove();
+  document.getElementById('current-search').addEventListener('click', (event) => {
+    if (event.target.closest('button')) {
+      event.target.closest('button').parentElement.remove();
     }
   });
 }
 
 // Fonction qui permet d'ajouter un item à la liste de recherche actuelle
 export function addListItemToCurrentSearch() {
-  const currentSearchDiv = document.getElementById('current-search');
   document.addEventListener('click', (event) => {
-    const item = event.target.closest('li');
-    if (item) {
-      currentSearchDiv.innerHTML += `
+    if (event.target.closest('li')) {
+      document.getElementById('current-search').innerHTML += `
         <div class="flex items-center justify-center gap-8 bg-yellow pl-4 rounded-xl activeFilter sm:text-base text-sm">
-          <p class="whitespace-nowrap">${item.innerText}</p>
+          <p class="whitespace-nowrap">${event.target.closest('li').innerText}</p>
           <button class="p-4">
             <i class="fas fa-times"></i>
           </button>

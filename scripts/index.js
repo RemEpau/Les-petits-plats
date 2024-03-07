@@ -1,65 +1,66 @@
 import { recipes } from '../data/recipes.js';
-import { filtresDropDown } from './utils/filters.js';
-import { RecipeTemplate } from "./models/RecipeTemplate.js";
-import { addListItemToCurrentSearch } from './utils/filters.js';
+import { filtresDropDown } from './utils/app.filters.js';
+import { RecipeTemplate } from "./models/app.class.RecipeTemplate.js";
+import { addListItemToCurrentSearch } from './utils/app.filters.js';
 
 async function displayData(recipesData, searchValue) {
-    const recipesDOM = document.getElementById('recipes');
     const noResults = document.getElementById('no-results');
 
-    recipesDOM.innerHTML = '';
+    document.getElementById('recipes').innerHTML = '';
     let tabIndex = 4;
     recipesData.forEach(recipe => {
-        const recipeModel = new RecipeTemplate(recipe);
-        const recipeCard = recipeModel.getRecipeCardDOM(tabIndex);
         tabIndex++;
-        recipesDOM.appendChild(recipeCard);
+        document.getElementById('recipes').appendChild(new RecipeTemplate(recipe).getRecipeCardDOM(tabIndex));
     });
-    const totalRecipes = recipesData.length;
-    document.getElementById('total-recipes').innerText = `${totalRecipes} recette${totalRecipes > 1 ? "s" : ""}`;
+    document.getElementById('total-recipes').innerText = `${recipesData.length} recette${recipesData.length > 1 ? "s" : ""}`;
 
-    if (totalRecipes === 0) {
+    if (recipesData.length === 0) {
         noResults.classList.replace("hidden", "flex");
-        noResults.children[0].innerText = `Aucune recette ne contient "${searchValue.join(' et ')}" vous pouvez chercher « tarte aux pommes », « poisson », etc.`;
+        noResults.children[0].innerText = `Aucune recette ne contient "${searchValue.join('" et "')}", vous pouvez chercher « tarte aux pommes », « poisson », etc.`;
     } else {
         noResults.classList.replace("flex", "hidden");
     }
     filtresDropDown(searchValue);
 }
 
+// Fonction qui filtres les recettes en fonction de la recherche principale
 function mainSearch(recipes) {
-    const searchForm = document.getElementById('main-search');
-    const resetForm = document.getElementById('reset-search');
-
-    searchForm.addEventListener("input", (e) => {
+    document.getElementById('main-search').addEventListener("input", (e) => {
         if (e.target.value.length > 0) {
-            resetForm.classList.remove("text-transparent");
+            document.getElementById('reset-search').classList.remove("text-transparent");
         } else {
-            resetForm.classList.add("text-transparent");
+            document.getElementById('reset-search').classList.add("text-transparent");
+        }
+
+        if (e.target.value.length > 3) {
+            const searchValue = e.target.value.split(" ");
+            const filteredRecipes = recipes.filter(recipe => {
+                return searchValue.every(id => {
+                    return (
+                        recipe.name.toLowerCase().includes(id.toLowerCase()) ||
+                        recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(id.toLowerCase())) ||
+                        recipe.description.toLowerCase().includes(id.toLowerCase()) ||
+                        recipe.appliance.toLowerCase().includes(id.toLowerCase()) ||
+                        recipe.utensils.some(utensil => utensil.toLowerCase().includes(id.toLowerCase()))
+                    );
+                });
+            });
+            displayData(filteredRecipes, searchValue);
+        } else {
+            displayData(recipes);
         }
     });
 
-    searchForm.addEventListener("submit", (e) => {
+    document.getElementById('main-search').addEventListener("submit", (e) => {
         e.preventDefault();
-        const searchValue = e.target.querySelector('input').value;
-        const currentSearchDiv = document.getElementById('current-search');
-
-        currentSearchDiv.innerHTML += `
-        <div class="flex items-center justify-center gap-8 bg-yellow pl-4 rounded-xl activeFilter sm:text-base text-sm">
-            <p class="whitespace-nowrap">${searchValue}</p>
-            <button class="p-4">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>`;
-        e.target.querySelector('input').value = "";
-        resetForm.classList.add("text-transparent");
     });
 
-    resetForm.addEventListener("click", () => {
-        resetForm.classList.add("text-transparent");
+    document.getElementById('reset-search').addEventListener("click", () => {
+        document.getElementById('reset-search').classList.add("text-transparent");
         displayData(recipes);
     });
 
+    // Observer pour observer les changements dans ".current-search"
     const observer = new MutationObserver(() => {
 
         const searchValue = Array.from(document.getElementById('current-search').children).map(div => div.querySelector('p').innerText);
@@ -69,16 +70,13 @@ function mainSearch(recipes) {
             const currentSearchs = Array.from(currentSearchDiv.children).map(div => div.querySelector('p').innerText.toLowerCase());
             return currentSearchs.every(id => {
                 const lowerCaseId = id.toLowerCase();
-                if (
+                return (
                     recipe.name.toLowerCase().includes(lowerCaseId) ||
                     recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(lowerCaseId)) ||
-                    recipe.description.toLowerCase().replace(/<[^>]*>?/gm, '').split(' ').includes(lowerCaseId) ||
+                    recipe.description.toLowerCase().includes(lowerCaseId) ||
                     recipe.appliance.toLowerCase().includes(lowerCaseId) ||
                     recipe.utensils.some(utensil => utensil.toLowerCase().includes(lowerCaseId))
-                ) {
-                    return true;
-                }
-                return false;
+                );
             });
         });
         displayData(filteredRecipes, searchValue);
