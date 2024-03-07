@@ -6,7 +6,7 @@ let dropDownCreated = false;
 
 export function filtresDropDown(currentSearch) {
   document.getElementById('filtres').innerHTML = '';
-  FILTERS.forEach((filter, i) => {
+  for (let i = 0; i < FILTERS.length; i++) {
     document.getElementById('filtres').innerHTML += `
         <div div class="sm:w-52 w-32 flex-1 mb-5 font-medium z-10 relative" id="${normalizedFilterName(FILTERS[i])}" tabindex="3"> 
           <div class="bg-white w-full sm:text-base text-sm p-4 flex items-center justify-between rounded-xl cursor-pointer btn-dropdown relative">
@@ -32,7 +32,7 @@ export function filtresDropDown(currentSearch) {
           </ul>
         </div>
         `
-  });
+  }
 
   // Fonction qui permet de lister les items en fonction du filtre
   function listItems(filtreName, currentSearch = []) {
@@ -97,11 +97,15 @@ export function filtresDropDown(currentSearch) {
   document.querySelectorAll('.filters-form input').forEach(input => {
     input.addEventListener('input', (event) => {
       // On filtre les items en fonction de la valeur de l'input
-      document.querySelectorAll(`#${event.target.closest('.relative').id} ul li`).forEach(item => {
+      const filterId = event.target.closest('.relative').id;
+      const currentSearchItems = Array.from(document.getElementById('current-search').children).map(div => div.querySelector('p').innerText.toLowerCase());
+      const filterItems = Array.from(document.querySelectorAll(`#${filterId} ul li`));
+
+      filterItems.forEach(item => {
         const itemValue = item.innerText.toLowerCase();
         if (event.target.value.toLowerCase() === '') {
           item.classList.remove('hidden');
-        } else if (itemValue.includes(event.target.value.toLowerCase()) && !Array.from(document.getElementById('current-search').children).map(div => div.querySelector('p').innerText.toLowerCase()).includes(itemValue)) {
+        } else if (itemValue.includes(event.target.value.toLowerCase()) && !currentSearchItems.includes(itemValue)) {
           item.classList.remove('hidden');
         } else {
           item.classList.add('hidden');
@@ -124,11 +128,12 @@ export function filtresDropDown(currentSearch) {
   }
 
   // On empêche la soumission des formulaires de filtres
-  document.querySelectorAll('.filters-form').forEach(form => {
-    form.addEventListener('submit', (event) => {
+  let forms = document.querySelectorAll('.filters-form');
+  for (let i = 0; i < forms.length; i++) {
+    forms[i].addEventListener('submit', (event) => {
       event.preventDefault();
     });
-  });
+  }
 
   // On ajoute un event listener sur chaque button dans les divs de current-search pour les supprimer
   document.getElementById('current-search').addEventListener('click', (event) => {
