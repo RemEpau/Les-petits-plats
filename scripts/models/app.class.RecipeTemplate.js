@@ -4,11 +4,7 @@ export class RecipeTemplate extends Recipe {
     constructor(recipe) {
         super(recipe);
     }
-
-    /**
-     * Récupère le DOM de la carte de recette.
-     * @returns {HTMLElement} - Le DOM de la carte de recette.
-     */
+    // Récupère le DOM de la carte de la recette.
     getRecipeCardDOM(i) {
         const recipeCard = new DOMParser().parseFromString(`
                 <article
@@ -38,10 +34,7 @@ export class RecipeTemplate extends Recipe {
         return recipeCard;
     }
 
-    /**
-     * Récupère le DOM des ingrédients de la recette.
-     * @returns {HTMLElement} - Le DOM des ingrédients de la recette.
-     */
+    // Récupère le DOM de la liste des ingrédients.
     getIngredientsDom() {
 
         // On crée un élément DOM pour la liste des ingrédients
@@ -49,18 +42,18 @@ export class RecipeTemplate extends Recipe {
         <div id="ingredients" class="grid grid-cols-2 gap-5"></div>
         `, "text/html").body.firstChild;
 
-        this.ingredients.forEach(ingredient => {
-
-            // Si l'ingrédient n'a pas de quantité ou d'unité, on les remplace par une chaine vide
+        for (let i = 0; i < this.ingredients.length; i++) {
+            let ingredient = this.ingredients[i];
 
             // On crée un élément DOM pour chaque ingrédient
             const ingredientDom = new DOMParser().parseFromString(`
-                <div>
-                    <h4 class="text-sm">${ingredient.ingredient}</h4>
-                    <p class="text-sm text-grey">${ingredient.quantity || ''} ${ingredient.unit || ''}</p>
-                </div>`, "text/html").body.firstChild;
+            <div>
+                <h4 class="text-sm">${ingredient.ingredient}</h4>
+                <p class="text-sm text-grey">${ingredient.quantity || ''} ${ingredient.unit || ''}</p>
+            </div>`, "text/html").body.firstChild;
+
             ingredientsDiv.appendChild(ingredientDom);
-        });
+        }
         return ingredientsDiv;
     }
 }
