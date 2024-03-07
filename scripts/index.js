@@ -8,10 +8,13 @@ async function displayData(recipesData, searchValue) {
 
     document.getElementById('recipes').innerHTML = '';
     let tabIndex = 4;
-    recipesData.forEach(recipe => {
+
+    for (let i = 0; i < recipesData.length; i++) {
+        let recipe = recipesData[i];
         tabIndex++;
         document.getElementById('recipes').appendChild(new RecipeTemplate(recipe).getRecipeCardDOM(tabIndex));
-    });
+    }
+
     document.getElementById('total-recipes').innerText = `${recipesData.length} recette${recipesData.length > 1 ? "s" : ""}`;
 
     if (recipesData.length === 0) {
@@ -63,22 +66,32 @@ function mainSearch(recipes) {
     // Observer pour observer les changements dans ".current-search"
     const observer = new MutationObserver(() => {
 
-        const searchValue = Array.from(document.getElementById('current-search').children).map(div => div.querySelector('p').innerText);
+        let searchValue = [];
+        let children = Array.from(document.getElementById('current-search').children);
+        for (let i = 0; i < children.length; i++) {
+            let div = children[i];
+            searchValue.push(div.querySelector('p').innerText);
+        }
 
-        const filteredRecipes = recipes.filter(recipe => {
-            const currentSearchDiv = document.getElementById('current-search');
-            const currentSearchs = Array.from(currentSearchDiv.children).map(div => div.querySelector('p').innerText.toLowerCase());
-            return currentSearchs.every(id => {
-                const lowerCaseId = id.toLowerCase();
-                return (
-                    recipe.name.toLowerCase().includes(lowerCaseId) ||
-                    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(lowerCaseId)) ||
-                    recipe.description.toLowerCase().includes(lowerCaseId) ||
-                    recipe.appliance.toLowerCase().includes(lowerCaseId) ||
-                    recipe.utensils.some(utensil => utensil.toLowerCase().includes(lowerCaseId))
-                );
-            });
-        });
+        let filteredRecipes = [];
+        for (let i = 0; i < recipes.length; i++) {
+            let recipe = recipes[i];
+            let match = true;
+            for (let j = 0; j < searchValue.length; j++) {
+                let id = searchValue[j];
+                if (!(recipe.name.toLowerCase().includes(id.toLowerCase()) ||
+                    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(id.toLowerCase())) ||
+                    recipe.description.toLowerCase().includes(id.toLowerCase()) ||
+                    recipe.appliance.toLowerCase().includes(id.toLowerCase()) ||
+                    recipe.utensils.some(utensil => utensil.toLowerCase().includes(id.toLowerCase())))) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) {
+                filteredRecipes.push(recipe);
+            }
+        }
         displayData(filteredRecipes, searchValue);
     });
 
@@ -93,4 +106,3 @@ async function init() {
 }
 
 init();
-
