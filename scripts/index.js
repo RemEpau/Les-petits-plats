@@ -45,9 +45,44 @@ function mainSearch(recipes) {
                     );
                 });
             });
-            displayData(filteredRecipes, searchValue);
+
+            const currentSearchDiv = document.getElementById('current-search');
+            if (currentSearchDiv.children.length > 0) {
+                const additionalSearchValue = Array.from(currentSearchDiv.children).map(div => div.querySelector('p').innerText.toLowerCase());
+                const additionalFilteredRecipes = filteredRecipes.filter(recipe => {
+                    return additionalSearchValue.every(id => {
+                        return (
+                            recipe.name.toLowerCase().includes(id) ||
+                            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(id)) ||
+                            recipe.description.toLowerCase().includes(id) ||
+                            recipe.appliance.toLowerCase().includes(id) ||
+                            recipe.utensils.some(utensil => utensil.toLowerCase().includes(id))
+                        );
+                    });
+                });
+                displayData(additionalFilteredRecipes, [...searchValue, ...additionalSearchValue]);
+            } else {
+                displayData(filteredRecipes, searchValue);
+            }
         } else {
-            displayData(recipes);
+            const currentSearchDiv = document.getElementById('current-search');
+            if (currentSearchDiv.children.length > 0) {
+                const additionalSearchValue = Array.from(currentSearchDiv.children).map(div => div.querySelector('p').innerText.toLowerCase());
+                const additionalFilteredRecipes = recipes.filter(recipe => {
+                    return additionalSearchValue.every(id => {
+                        return (
+                            recipe.name.toLowerCase().includes(id) ||
+                            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(id)) ||
+                            recipe.description.toLowerCase().includes(id) ||
+                            recipe.appliance.toLowerCase().includes(id) ||
+                            recipe.utensils.some(utensil => utensil.toLowerCase().includes(id))
+                        );
+                    });
+                });
+                displayData(additionalFilteredRecipes, additionalSearchValue);
+            } else {
+                displayData(recipes);
+            }
         }
     });
 
