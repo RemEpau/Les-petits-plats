@@ -37,20 +37,89 @@ function mainSearch(recipes) {
 
         if (e.target.value.length > 3) {
             const searchValue = e.target.value.split(" ");
-            const filteredRecipes = recipes.filter(recipe => {
-                return searchValue.every(id => {
-                    return (
-                        recipe.name.toLowerCase().includes(id.toLowerCase()) ||
+            const filteredRecipes = [];
+            for (let i = 0; i < recipes.length; i++) {
+                const recipe = recipes[i];
+                let match = true;
+                for (let j = 0; j < searchValue.length; j++) {
+                    const id = searchValue[j];
+                    if (!(recipe.name.toLowerCase().includes(id.toLowerCase()) ||
                         recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(id.toLowerCase())) ||
                         recipe.description.toLowerCase().includes(id.toLowerCase()) ||
                         recipe.appliance.toLowerCase().includes(id.toLowerCase()) ||
-                        recipe.utensils.some(utensil => utensil.toLowerCase().includes(id.toLowerCase()))
-                    );
-                });
-            });
-            displayData(filteredRecipes, searchValue);
+                        recipe.utensils.some(utensil => utensil.toLowerCase().includes(id.toLowerCase())))) {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match) {
+                    filteredRecipes.push(recipe);
+                }
+            }
+
+            const currentSearchDiv = document.getElementById('current-search');
+            if (currentSearchDiv.children.length > 0) {
+                const additionalSearchValue = [];
+                const children = Array.from(currentSearchDiv.children);
+                for (let i = 0; i < children.length; i++) {
+                    const div = children[i];
+                    additionalSearchValue.push(div.querySelector('p').innerText.toLowerCase());
+                }
+                const additionalFilteredRecipes = [];
+                for (let i = 0; i < filteredRecipes.length; i++) {
+                    const recipe = filteredRecipes[i];
+                    let match = true;
+                    for (let j = 0; j < additionalSearchValue.length; j++) {
+                        const id = additionalSearchValue[j];
+                        if (!(recipe.name.toLowerCase().includes(id) ||
+                            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(id)) ||
+                            recipe.description.toLowerCase().includes(id) ||
+                            recipe.appliance.toLowerCase().includes(id) ||
+                            recipe.utensils.some(utensil => utensil.toLowerCase().includes(id)))) {
+                            match = false;
+                            break;
+                        }
+                    }
+                    if (match) {
+                        additionalFilteredRecipes.push(recipe);
+                    }
+                }
+                displayData(additionalFilteredRecipes, [...searchValue, ...additionalSearchValue]);
+            } else {
+                displayData(filteredRecipes, searchValue);
+            }
         } else {
-            displayData(recipes);
+            const currentSearchDiv = document.getElementById('current-search');
+            if (currentSearchDiv.children.length > 0) {
+                const additionalSearchValue = [];
+                const children = Array.from(currentSearchDiv.children);
+                for (let i = 0; i < children.length; i++) {
+                    const div = children[i];
+                    additionalSearchValue.push(div.querySelector('p').innerText.toLowerCase());
+                }
+                const additionalFilteredRecipes = [];
+                for (let i = 0; i < recipes.length; i++) {
+                    const recipe = recipes[i];
+                    let match = true;
+                    for (let j = 0; j < additionalSearchValue.length; j++) {
+                        const id = additionalSearchValue[j];
+                        if (!(recipe.name.toLowerCase().includes(id) ||
+                            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(id)) ||
+                            recipe.description.toLowerCase().includes(id) ||
+                            recipe.appliance.toLowerCase().includes(id) ||
+                            recipe.utensils.some(utensil => utensil.toLowerCase().includes(id)))) {
+                            match = false;
+                            break;
+                        }
+                    }
+                    if (match) {
+                        additionalFilteredRecipes.push(recipe);
+                    }
+                }
+                displayData(additionalFilteredRecipes, additionalSearchValue);
+            } else {
+                displayData(recipes);
+            }
         }
     });
 
