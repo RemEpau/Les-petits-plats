@@ -16,7 +16,7 @@ async function displayData(recipesData, searchValue) {
 
     if (recipesData.length === 0) {
         noResults.classList.replace("hidden", "flex");
-        noResults.children[0].innerText = `Aucune recette ne contient "${searchValue.join('" et "')}", vous pouvez chercher « tarte aux pommes », « poisson », etc.`;
+        noResults.children[0].innerText = `Aucune recette ne contient "${searchValue.join('" et "')}", vous pouvez chercher "tarte aux pommes", "poisson", etc.`;
     } else {
         noResults.classList.replace("flex", "hidden");
     }
