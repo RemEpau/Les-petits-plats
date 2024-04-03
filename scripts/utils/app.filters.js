@@ -63,14 +63,22 @@ export function filtresDropDown(currentSearch) {
         }
         items.push(...recipeItems);
       }
-      items = Array.from(new Set(items))
-        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
-        .map(item => {
-          return `
-            <li class="p-2 sm:text-base text-sm hover:bg-yellow focus:bg-yellow cursor-pointer capitalize" tabindex="0">${item}</li>
-          `;
-        }).join('');
-      return items;
+      let uniqueItems = [];
+      for (let i = 0; i < items.length; i++) {
+        if (!uniqueItems.includes(items[i])) {
+          uniqueItems.push(items[i]);
+        }
+      }
+      uniqueItems.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+      let formattedItems = '';
+      for (let i = 0; i < uniqueItems.length; i++) {
+        formattedItems += `
+          <li class="p-2 sm:text-base text-sm hover:bg-yellow focus:bg-yellow cursor-pointer capitalize" tabindex="0">${uniqueItems[i]}</li>
+        `;
+      }
+
+      return formattedItems;
     }
     // Sinon, on filtre les items en fonction de la valeur de l'input
     else {
@@ -130,26 +138,43 @@ export function filtresDropDown(currentSearch) {
           items.push(...recipeItems);
         }
       }
-      items = Array.from(new Set(items))
-        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
-        .map(item => {
-          return `
-                <li class="p-2 hover:bg-yellow sm:text-base text-sm focus:bg-yellow cursor-pointer capitalize" tabindex="0">${item}</li>
-              `;
-        }).join('');
-      return items;
+      let uniqueItems = [];
+      for (let i = 0; i < items.length; i++) {
+        if (!uniqueItems.includes(items[i])) {
+          uniqueItems.push(items[i]);
+        }
+      }
+      uniqueItems.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+      let formattedItems = '';
+      for (let i = 0; i < uniqueItems.length; i++) {
+        formattedItems += `
+          <li class="p-2 hover:bg-yellow sm:text-base text-sm focus:bg-yellow cursor-pointer capitalize" tabindex="0">${uniqueItems[i]}</li>
+        `;
+      }
+
+      return formattedItems;
     }
   }
 
   // Fonction qui permet de filtrer les items en fonction de la valeur de l'input
-  document.querySelectorAll('.filters-form input').forEach(input => {
+  const filterInputs = document.querySelectorAll('.filters-form input');
+  for (let i = 0; i < filterInputs.length; i++) {
+    const input = filterInputs[i];
     input.addEventListener('input', (event) => {
       // On filtre les items en fonction de la valeur de l'input
       const filterId = event.target.closest('.relative').id;
-      const currentSearchItems = Array.from(document.getElementById('current-search').children).map(div => div.querySelector('p').innerText.toLowerCase());
-      const filterItems = Array.from(document.querySelectorAll(`#${filterId} ul li`));
+      const currentSearchItems = [];
+      const currentSearchDivs = document.getElementById('current-search').children;
+      for (let j = 0; j < currentSearchDivs.length; j++) {
+        const div = currentSearchDivs[j];
+        const p = div.querySelector('p');
+        currentSearchItems.push(p.innerText.toLowerCase());
+      }
+      const filterItems = document.querySelectorAll(`#${filterId} ul li`);
 
-      filterItems.forEach(item => {
+      for (let k = 0; k < filterItems.length; k++) {
+        const item = filterItems[k];
         const itemValue = item.innerText.toLowerCase();
         if (event.target.value.toLowerCase() === '') {
           item.classList.remove('hidden');
@@ -158,21 +183,20 @@ export function filtresDropDown(currentSearch) {
         } else {
           item.classList.add('hidden');
         }
-      });
-    });
-  });
-
-  // Fonction qui permet d'ouvrir ou de fermer le dropdown
-  if (dropDownCreated === false) {
-    document.addEventListener('click', (event) => {
-      const button = event.target.closest('.btn-dropdown');
-      if (button) {
-        button.nextElementSibling.classList.toggle('hidden');
-        button.classList.toggle('rounded-xl');
-        button.classList.toggle('rounded-t-xl');
       }
     });
-    dropDownCreated = true;
+    // Fonction qui permet d'ouvrir ou de fermer le dropdown
+    if (dropDownCreated === false) {
+      document.addEventListener('click', (event) => {
+        const button = event.target.closest('.btn-dropdown');
+        if (button) {
+          button.nextElementSibling.classList.toggle('hidden');
+          button.classList.toggle('rounded-xl');
+          button.classList.toggle('rounded-t-xl');
+        }
+      });
+      dropDownCreated = true;
+    }
   }
 
   // On empêche la soumission des formulaires de filtres

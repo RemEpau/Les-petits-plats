@@ -60,12 +60,16 @@ function mainSearch(recipes) {
             const currentSearchDiv = document.getElementById('current-search');
             if (currentSearchDiv.children.length > 0) {
                 const additionalSearchValue = [];
-                const children = Array.from(currentSearchDiv.children);
+                const children = [];
+                const additionalFilteredRecipes = [];
+                const currentSearchDiv = document.getElementById('current-search');
+                for (let i = 0; i < currentSearchDiv.children.length; i++) {
+                    children.push(currentSearchDiv.children[i]);
+                }
                 for (let i = 0; i < children.length; i++) {
                     const div = children[i];
                     additionalSearchValue.push(div.querySelector('p').innerText.toLowerCase());
                 }
-                const additionalFilteredRecipes = [];
                 for (let i = 0; i < filteredRecipes.length; i++) {
                     const recipe = filteredRecipes[i];
                     let match = true;
@@ -92,12 +96,16 @@ function mainSearch(recipes) {
             const currentSearchDiv = document.getElementById('current-search');
             if (currentSearchDiv.children.length > 0) {
                 const additionalSearchValue = [];
-                const children = Array.from(currentSearchDiv.children);
+                const children = [];
+                const additionalFilteredRecipes = [];
+                const currentSearchDiv = document.getElementById('current-search');
+                for (let i = 0; i < currentSearchDiv.children.length; i++) {
+                    children.push(currentSearchDiv.children[i]);
+                }
                 for (let i = 0; i < children.length; i++) {
                     const div = children[i];
                     additionalSearchValue.push(div.querySelector('p').innerText.toLowerCase());
                 }
-                const additionalFilteredRecipes = [];
                 for (let i = 0; i < recipes.length; i++) {
                     const recipe = recipes[i];
                     let match = true;
@@ -134,15 +142,17 @@ function mainSearch(recipes) {
 
     // Observer pour observer les changements dans ".current-search"
     const observer = new MutationObserver(() => {
-
         let searchValue = [];
-        let children = Array.from(document.getElementById('current-search').children);
+        let children = [];
+        let filteredRecipes = [];
+        const currentSearchDiv = document.getElementById('current-search');
+        for (let i = 0; i < currentSearchDiv.children.length; i++) {
+            children.push(currentSearchDiv.children[i]);
+        }
         for (let i = 0; i < children.length; i++) {
             let div = children[i];
             searchValue.push(div.querySelector('p').innerText);
         }
-
-        let filteredRecipes = [];
         for (let i = 0; i < recipes.length; i++) {
             let recipe = recipes[i];
             let match = true;
