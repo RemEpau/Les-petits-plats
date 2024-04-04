@@ -106,7 +106,6 @@ function mainSearch(recipes) {
 
         let filteredRecipes = recipes;
 
-        // Filter based on main-search value
         if (mainSearchValue) {
             filteredRecipes = filteredRecipes.filter(recipe => {
                 return (
@@ -119,7 +118,6 @@ function mainSearch(recipes) {
             });
         }
 
-        // Filter based on current-search values
         if (currentSearchValues.length > 0) {
             filteredRecipes = filteredRecipes.filter(recipe => {
                 return currentSearchValues.every(id => {
