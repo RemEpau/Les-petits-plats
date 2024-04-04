@@ -142,7 +142,7 @@ function mainSearch(recipes) {
     observer.observe(document.getElementById('current-search'), { childList: true });
 }
 
-async function init() {
+function init() {
     displayData(recipes);
     filtresDropDown();
     mainSearch(recipes);
