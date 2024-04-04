@@ -4,7 +4,7 @@ import { FILTERS } from '../constants/app.contants.js';
 
 let dropDownCreated = false;
 
-export function filtresDropDown(currentSearch) {
+export function filtresDropDown(currentSearch = []) {
   document.getElementById('filtres').innerHTML = '';
   for (let i = 0; i < FILTERS.length; i++) {
     document.getElementById('filtres').innerHTML += `
