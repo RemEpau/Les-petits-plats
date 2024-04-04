@@ -34,7 +34,7 @@ function mainSearch(recipes) {
             document.getElementById('reset-search').classList.add("text-transparent");
         }
 
-        if (e.target.value.length > 3) {
+        if (e.target.value.length >= 3) {
             const searchValue = e.target.value.split(" ");
             const filteredRecipes = [];
             for (let i = 0; i < recipes.length; i++) {
