@@ -35,7 +35,7 @@ export function filtresDropDown(currentSearch = []) {
   }
 
   // Fonction qui permet de lister les items en fonction du filtre
-  function listItems(filtreName, currentSearch = []) {
+  function listItems(filtreName, currentSearch) {
     // Si la recherche est vide, on retourne tous les items
     if (currentSearch.length === 0) {
       let items = [];
