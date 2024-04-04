@@ -158,11 +158,19 @@ function mainSearch(recipes) {
             let match = true;
             for (let j = 0; j < searchValue.length; j++) {
                 let id = searchValue[j];
+                let ingredientMatch = false;
+                for (let k = 0; k < recipe.ingredients.length; k++) {
+                    let ingredient = recipe.ingredients[k];
+                    if (ingredient.ingredient.toLowerCase().includes(id.toLowerCase())) {
+                        ingredientMatch = true;
+                        break;
+                    }
+                }
                 if (!(recipe.name.toLowerCase().includes(id.toLowerCase()) ||
-                    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(id.toLowerCase())) ||
+                    ingredientMatch ||
                     recipe.description.toLowerCase().includes(id.toLowerCase()) ||
                     recipe.appliance.toLowerCase().includes(id.toLowerCase()) ||
-                    recipe.utensils.some(utensil => utensil.toLowerCase().includes(id.toLowerCase())))) {
+                    recipe.utensils.includes(id.toLowerCase()))) {
                     match = false;
                     break;
                 }
@@ -173,9 +181,7 @@ function mainSearch(recipes) {
         }
         displayData(filteredRecipes, searchValue);
     });
-
     observer.observe(document.getElementById('current-search'), { childList: true });
-
 }
 
 async function init() {
